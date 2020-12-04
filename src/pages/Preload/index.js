@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { Text } from 'react-native';
 import { Container, LoadingIcon } from './styles';
-import AsyncStorage from '@react-native-community/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
+import { getAuthenticate } from '../../utils/loginStorage';
 import ConsoleLogo from '../../assets/game-console.svg';
 
 export default () => {
@@ -13,13 +12,20 @@ export default () => {
 
     useEffect(() => {
         const checkLogin = async () => {
-            const token = await AsyncStorage.getItem('token');
-            if(token){
-                // validar o token
-                
-            }else{
-                navigation.navigate('SignIn');
-            }
+
+            getAuthenticate().then(authenticated => {
+
+                if (authenticated === "true") {
+                    navigation.reset({
+                        routes: [{ name: 'MainTab' }]
+                    });
+                } else {
+                    navigation.reset({
+                        routes: [{ name: 'SignIn' }]
+                    });
+                }
+
+            });
         }
 
         checkLogin();

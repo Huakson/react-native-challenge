@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
     Container,
     InputArea,
@@ -9,6 +9,8 @@ import {
     SignMessageButtonText,
     SignMessageButtonTextBold
 } from './styles';
+
+import { signIn } from '../../utils/loginStorage';
 
 import SignInput from '../../components/SignInput';
 
@@ -23,8 +25,23 @@ export default () => {
     const [emailField, setEmailField] = useState('');
     const [passwordField, setPasswordField] = useState('');
 
-    const handleSignInButtonClick = () => {
+    const handleSignInButtonClick = async () => {
+        if (emailField != '' && passwordField != '') {
+            await signIn(emailField, passwordField).then((response) => {
+                if(response) {
+                    
+                    navigation.reset({
+                        routes: [{name: 'MainTab'}]
+                    });
 
+                }else{
+                    alert("E-mail e/ou senha estão incorretos");
+                }
+            });
+            
+        } else {
+            alert("Preencha corretamente os campos!")
+        }
     }
 
     const handleSignUpButtonClick = () => {
@@ -41,14 +58,14 @@ export default () => {
                     IconSvg={EmailIcon}
                     placeholder="Digite seu e-mail"
                     value={emailField}
-                    onChangeText={text=>setEmailField(text)}
+                    onChangeText={text => setEmailField(text)}
                 />
 
                 <SignInput
                     IconSvg={LockIcon}
                     placeholder="Digite sua senha"
                     value={passwordField}
-                    onChangeText={text=>setPasswordField(text)}
+                    onChangeText={text => setPasswordField(text)}
                     password={true}
                 />
 

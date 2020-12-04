@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+
 import {
     Container,
     InputArea,
@@ -9,6 +10,8 @@ import {
     SignMessageButtonText,
     SignMessageButtonTextBold
 } from './styles';
+
+import { signUp } from '../../utils/loginStorage';
 
 import SignInput from '../../components/SignInput';
 
@@ -25,16 +28,34 @@ export default () => {
     const [emailField, setEmailField] = useState('');
     const [passwordField, setPasswordField] = useState('');
 
-    const handleSignInButtonClick = () => {
+    const handleSignInButtonClick = async () => {
+        
+        if (emailField != '' && passwordField != '' && nameField != '') {
+            await signUp(nameField, emailField, passwordField).then((response) => {
+                if (response) {
 
+                    navigation.reset({
+                        routes: [{name: 'MainTab'}]
+                    });
+
+                } else {
+                    alert("Email indisponivel");
+                }
+            });
+        } else {
+            alert("Preencha corretamente os campos!")
+        }
     }
 
     const handleSignUpButtonClick = () => {
-        navigation.reset({
-            routes: [{ name: 'SignIn' }]
-        });
+        navigateTo('SignIn');
     }
 
+    const navigateTo = (page) => {
+        navigation.reset({
+            routes: [{ name: `${page}` }]
+        });
+    }
 
     return (
         <Container >
