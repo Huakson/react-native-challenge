@@ -1,13 +1,16 @@
 import React from 'react';
-import { 
-    TabArea, 
+import {
+    TabArea,
     TabItem,
-    TabItemCenter
+    TabItemCenter,
+    CartIconArea,
+    BadgePosition
 } from './styles';
 
 import HomeIcon from '../../assets/home.svg';
 import CartIcon from '../../assets/cart.svg';
 import ProfileIcon from '../../assets/person.svg';
+import { Badge } from 'react-native-paper';
 
 export default ({ state, navigation }) => {
 
@@ -26,11 +29,20 @@ export default ({ state, navigation }) => {
                 />
             </TabItem>
             <TabItemCenter onPress={() => goTo('Cart')}>
-                <CartIcon
-                    width="32"
-                    height="32"
-                    fill="#4EADBE"
-                />
+                
+                <BadgePosition/>
+                <Badge >9</Badge>
+
+                <CartIconArea>
+                    <CartIcon
+                        width="32"
+                        height="32"
+                        fill="#4EADBE"
+
+                    >
+                    </CartIcon>
+                </CartIconArea>
+
             </TabItemCenter>
             <TabItem onPress={() => goTo('Profile')}>
                 <ProfileIcon

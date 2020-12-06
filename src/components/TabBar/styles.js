@@ -22,4 +22,11 @@ export const TabItemCenter = styled.TouchableOpacity`
     border: 3px solid #4EADBE;
     margin-top: -20px;
 `;
+
+export const CartIconArea = styled.View`
+    position: absolute;
+`;
  
+export const BadgePosition = styled.View`
+    margin-top: -40px;
+`;
