@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import {
@@ -20,6 +20,9 @@ import EmailIcon from '../../assets/email.svg';
 import LockIcon from '../../assets/lock.svg';
 import PersonIcon from '../../assets/person.svg';
 
+
+import { UserContext } from '../../contexts/UserContext';
+
 export default () => {
 
     const navigation = useNavigation();
@@ -28,14 +31,24 @@ export default () => {
     const [emailField, setEmailField] = useState('');
     const [passwordField, setPasswordField] = useState('');
 
+    const { dispatch: userDispatch } = useContext(UserContext);
+
+
     const handleSignInButtonClick = async () => {
-        
+
         if (emailField != '' && passwordField != '' && nameField != '') {
             await signUp(nameField, emailField, passwordField).then((response) => {
                 if (response) {
 
+                    userDispatch({
+                        type: 'setName',
+                        payload: {
+                            name: response.name
+                        }
+                    });
+
                     navigation.reset({
-                        routes: [{name: 'MainTab'}]
+                        routes: [{ name: 'MainTab' }]
                     });
 
                 } else {

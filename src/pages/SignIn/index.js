@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
+
 import {
     Container,
     InputArea,
@@ -18,7 +19,12 @@ import ConsoleLogo from '../../assets/game-console.svg';
 import EmailIcon from '../../assets/email.svg';
 import LockIcon from '../../assets/lock.svg';
 
+import { UserContext } from '../../contexts/UserContext';
+
 export default () => {
+
+    const { dispatch: userDispatch } = useContext(UserContext);
+
 
     const navigation = useNavigation();
 
@@ -26,19 +32,27 @@ export default () => {
     const [passwordField, setPasswordField] = useState('');
 
     const handleSignInButtonClick = async () => {
+
         if (emailField != '' && passwordField != '') {
             await signIn(emailField, passwordField).then((response) => {
-                if(response) {
-                    
-                    navigation.reset({
-                        routes: [{name: 'MainTab'}]
+                if (response) {
+
+                    userDispatch({
+                        type: 'setName',
+                        payload: {
+                            name: response.name
+                        }
                     });
 
-                }else{
+                    navigation.reset({
+                        routes: [{ name: 'MainTab' }]
+                    });
+
+                } else {
                     alert("E-mail e/ou senha estão incorretos");
                 }
             });
-            
+
         } else {
             alert("Preencha corretamente os campos!")
         }

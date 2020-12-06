@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Image } from 'react-native';
+import React, { useState, useContext } from 'react';
 import {
     Area,
     ProductImage,
@@ -17,9 +16,30 @@ import { formatMoney } from '../../utils';
 import CartIcon from '../../assets/cartIcon.svg';
 import AddedIcon from '../../assets/accept.svg';
 
+import { UserContext } from '../../contexts/UserContext';
+
 export default ({ data }) => {
 
-    const [addedToCart, setAddedToCart] = useState(false);
+    
+    const { state: userState, dispatch: userDispatch} = useContext(UserContext);
+
+    const addedToCart = () => {
+        return userState.cart.some(item => item.id === data.id);
+    }
+
+    const handleProduct = () => {
+        data.qtd = 1;
+        if (!addedToCart()) {
+            userDispatch({
+                type: 'addProduct',
+                payload: {
+                    produto: data
+                }
+            });
+
+        }
+
+    }
 
     return (
         <Area>
@@ -29,9 +49,9 @@ export default ({ data }) => {
                 <ProductPrice>Preço: {formatMoney(data.price)}</ProductPrice>
                 <ProductScore>Popularidade: {data.score}</ProductScore>
 
-                <AddToCartButton onPress={() => setAddedToCart(true)}>
+                <AddToCartButton onPress={() => handleProduct()}>
 
-                    {addedToCart ?
+                    {addedToCart() ?
                         <CartArea>
                             <CartText>
                                 <AddedIcon

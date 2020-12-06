@@ -9,8 +9,14 @@ export const signIn = async (email, password) => {
         user = JSON.parse(user);
 
         if (user.password === password) {
-            await AsyncStorage.setItem('authenticated', 'true');
-            console.log(`olaa ${result}`);
+
+            let authData = {
+                authenticated: 'true',
+                email: user.email
+            };
+
+            await AsyncStorage.setItem('authenticated', JSON.stringify(authData));
+
             return user;
         }
 
@@ -29,21 +35,35 @@ export const signUp = async (name, email, password) => {
         const data = {
             name: name,
             email: email,
-            password: password
+            password: password,
+            cartProducts: []
         }
 
         await AsyncStorage.setItem(email, JSON.stringify(data));
 
+        let authData = {
+            authenticated: 'true',
+            email: data.email
+        };
+
+        await AsyncStorage.setItem('authenticated', JSON.stringify(authData));
+
         return data;
     } catch (e) {
-        console.log(e);
+
         return false;
     }
 }
 
 export const logout = async () => {
     try {
-        await AsyncStorage.setItem('authenticated', 'false');
+
+        let authData = {
+            authenticated: 'false',
+            email: ''
+        };
+
+        await AsyncStorage.setItem('authenticated', JSON.stringify(authData));
 
         return true;
     } catch (e) {
@@ -53,7 +73,18 @@ export const logout = async () => {
 
 export const getAuthenticate = async () => {
     try {
-        return await AsyncStorage.getItem('authenticated') || 'nao';
+        let data = await AsyncStorage.getItem('authenticated');
+        data = JSON.parse(data);
+        return data;
+    } catch (e) {
+        return false;
+    }
+}
+
+
+export const getUser = async (email) => {
+    try {
+        return await JSON.parse(AsyncStorage.getItem(email));
     } catch (e) {
         return false;
     }

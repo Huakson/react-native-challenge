@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
     TabArea,
     TabItem,
@@ -12,7 +12,14 @@ import CartIcon from '../../assets/cart.svg';
 import ProfileIcon from '../../assets/person.svg';
 import { Badge } from 'react-native-paper';
 
+import { UserContext } from '../../contexts/UserContext';
+
 export default ({ state, navigation }) => {
+
+    const { state: userStore } = useContext(UserContext);
+    let bagdeCount;
+
+    bagdeCount = userStore.cart.length;
 
     const goTo = (pageName) => {
         navigation.navigate(pageName);
@@ -29,9 +36,9 @@ export default ({ state, navigation }) => {
                 />
             </TabItem>
             <TabItemCenter onPress={() => goTo('Cart')}>
-                
-                <BadgePosition/>
-                <Badge >9</Badge>
+
+                <BadgePosition />
+                <Badge visible={ bagdeCount === 0 ? false : true }>{bagdeCount}</Badge>
 
                 <CartIconArea>
                     <CartIcon

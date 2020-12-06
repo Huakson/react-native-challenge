@@ -1,24 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Container, LoadingIcon } from './styles';
 import { useNavigation } from '@react-navigation/native';
 
-import { getAuthenticate } from '../../utils/loginStorage';
+import { getAuthenticate, getUser } from '../../utils/loginStorage';
 import ConsoleLogo from '../../assets/game-console.svg';
+
+import { UserContext } from '../../contexts/UserContext';
 
 export default () => {
 
     const navigation = useNavigation();
-
+    const { dispatch: userDispatch } = useContext(UserContext);
 
     useEffect(() => {
         const checkLogin = async () => {
 
             getAuthenticate().then(authenticated => {
+                if (authenticated.authenticated === 'true') {
 
-                if (authenticated === "true") {
-                    navigation.reset({
-                        routes: [{ name: 'MainTab' }]
+                    getUser(authenticated.email).then((user) => {
+
+                        userDispatch({
+                            type: 'setName',
+                            payload: {
+                                name: user.name
+                            }
+                        });
+
+                        navigation.reset({
+                            routes: [{ name: 'MainTab' }]
+                        });
+
                     });
+
                 } else {
                     navigation.reset({
                         routes: [{ name: 'SignIn' }]
