@@ -35,8 +35,7 @@ export const signUp = async (name, email, password) => {
         const data = {
             name: name,
             email: email,
-            password: password,
-            cartProducts: []
+            password: password
         }
 
         await AsyncStorage.setItem(email, JSON.stringify(data));
@@ -84,8 +83,42 @@ export const getAuthenticate = async () => {
 
 export const getUser = async (email) => {
     try {
-        return await JSON.parse(AsyncStorage.getItem(email));
+        let data = await AsyncStorage.getItem(email);
+        data = JSON.parse(data)
+        return data;
     } catch (e) {
         return false;
     }
 }
+
+export const changePassword = async (email, newPassword, oldPassword) => {
+    try {
+        await getUser(email).then(async (response) => {
+
+            if(!(newPassword != response.password)) return false;
+            if(oldPassword != response.password) return false;
+
+            await AsyncStorage.removeItem(response.email);
+
+            const newUser = {
+                name: response.name,
+                email: response.email,
+                password: newPassword
+            };
+
+            await AsyncStorage.setItem(response.email, JSON.stringify(newUser));
+            
+            let authData = {
+                authenticated: 'false',
+                email: ''
+            };
+    
+            await AsyncStorage.setItem('authenticated', JSON.stringify(authData));
+            
+        });
+
+        return true;
+    } catch (e) {
+        return false;
+    }
+};

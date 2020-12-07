@@ -22,16 +22,50 @@ export default () => {
 
     const navigation = useNavigation();
 
-    const { state: userState } = useContext(UserContext);
+    const { state: userState, dispatch: userDispatch } = useContext(UserContext);
     const products = [];
 
     let cartEmpty = userState.cart.length === 0 ? true : false;
 
     products.push(...userState.cart);
 
+    const calcCheckOut = () => {
+        let freight = 0;
+        let subTotal = 0;
+        let total = 0;
+
+        products.map((item, index) => {
+            freight += 10 * item.qtd;
+            subTotal += item.price * item.qtd;
+        });
+
+        if(subTotal > 250) freight = 0;
+
+        total = subTotal + freight;
+
+
+
+        let checkout = {
+            freight: freight,
+            subTotal: subTotal,
+            total: total
+        }
+
+        userDispatch({
+            type: 'setCheckOut',
+            payload: {
+                checkout: checkout
+            }
+        });
+
+
+        navigation.navigate('CheckOut');
+
+    }
+
     return (
         <Container>
-            <Scroller> 
+            <Scroller>
 
                 <HeaderArea>
                     <HeaderTitle>Seu carrinho</HeaderTitle>
@@ -47,9 +81,10 @@ export default () => {
 
                 {
                     cartEmpty ? (
-                        <EmptyText>Seu carrinho está vazio :( </EmptyText>
+                        <EmptyText>Seu carrinho está vazio, adicione produtos :)</EmptyText>
+
                     )
-                        : <CheckoutButton onPress={() => navigation.navigate('CheckOut')}>
+                        : <CheckoutButton onPress={() => calcCheckOut()}>
                             <CheckoutText>Finalizar pedido (check-out)</CheckoutText>
                         </CheckoutButton>
                 }

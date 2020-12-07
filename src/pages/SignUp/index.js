@@ -43,6 +43,7 @@ export default () => {
                     userDispatch({
                         type: 'setName',
                         payload: {
+                            email: response.email,
                             name: response.name
                         }
                     });

@@ -16,28 +16,35 @@ export default () => {
         const checkLogin = async () => {
 
             getAuthenticate().then(authenticated => {
-                if (authenticated.authenticated === 'true') {
 
-                    getUser(authenticated.email).then((user) => {
+                if (authenticated) {
+                    if (authenticated.authenticated === 'true') {
 
-                        userDispatch({
-                            type: 'setName',
-                            payload: {
-                                name: user.name
-                            }
+                        getUser(authenticated.email).then((user) => {
+
+                            console.log(`authenticate ${JSON.stringify(user)}`);
+
+                            userDispatch({
+                                type: 'setName',
+                                payload: {
+                                    email: user.email,
+                                    name: user.name
+
+                                }
+                            });
+
+                            navigation.reset({
+                                routes: [{ name: 'MainTab' }]
+                            });
+
                         });
-
-                        navigation.reset({
-                            routes: [{ name: 'MainTab' }]
-                        });
-
-                    });
-
-                } else {
-                    navigation.reset({
-                        routes: [{ name: 'SignIn' }]
-                    });
+                    }
                 }
+
+                navigation.reset({
+                    routes: [{ name: 'SignIn' }]
+                });
+
 
             });
         }

@@ -61,13 +61,13 @@ export default ({ data }) => {
 
                 <RemoveProductButton onPress={() => removeProduct()}>
 
-                    <CartText>
+                    <CartText >
                         <CartIcon
                             width="24"
                             height="24"
                             fill="#d9534f"
                         />
-                            Remover produto
+                        Remover produto
                     </CartText>
 
                 </RemoveProductButton>

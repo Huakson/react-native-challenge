@@ -1,6 +1,12 @@
 export const initialState = {
+    email: '',
     name: '',
-    cart: []
+    cart: [],
+    checkOut: {
+        freight: 0,
+        subTotal: 0,
+        total: 0
+    }
 };
 
 export const UserReducer = (state, action) => {
@@ -8,7 +14,8 @@ export const UserReducer = (state, action) => {
         case 'setName':
             return {
                 ...state,
-                name: action.payload.name
+                name: action.payload.name,
+                email: action.payload.email
             };
         case 'addProduct':
             return {
@@ -30,7 +37,22 @@ export const UserReducer = (state, action) => {
                     }
                     return item
                 })
-            }          
+            }
+        case 'setCheckOut':
+            return{
+                ...state,
+                checkOut: {
+                    freight: action.payload.checkout.freight,
+                    subTotal: action.payload.checkout.subTotal,
+                    Total: action.payload.checkout.total
+                }
+            } 
+        case 'clean':
+            return{
+                ...state,
+                cart: [],
+                checkout: {}
+            }                 
         default:
             return state;
     }
